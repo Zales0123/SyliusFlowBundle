@@ -40,7 +40,7 @@ final class RegisterStepsPassSpec extends ObjectBehavior
             ],
         ]);
 
-        $coordinator->addMethodCall('registerStep', Argument::type('array'))->shouldBeCalled();
+        $coordinator->addMethodCall('registerStep', Argument::type('array'))->willReturn($coordinator)->shouldBeCalled();
 
         $this->process($container);
     }

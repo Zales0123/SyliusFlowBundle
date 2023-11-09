@@ -32,7 +32,7 @@ final class RegisterSessionBagsPassSpec extends ObjectBehavior
     function it_processes(ContainerBuilder $container, Definition $session)
     {
         $container->getDefinition('session')->shouldBeCalled()->willreturn($session);
-        $session->addMethodCall('registerBag', Argument::type('array'))->shouldBeCalled();
+        $session->addMethodCall('registerBag', Argument::type('array'))->willReturn($session)->shouldBeCalled();
 
         $this->process($container);
     }

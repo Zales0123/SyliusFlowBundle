@@ -44,7 +44,7 @@ final class ProcessContextSpec extends ObjectBehavior
         StepInterface $previousStep,
         StepInterface $nextStep
     ) {
-        $process->getScenarioAlias()->shouldBeCalled();
+        $process->getScenarioAlias()->willReturn('alias')->shouldBeCalled();
         $storage->initialize(Argument::type('string'))->shouldBeCalled();
         $process->getOrderedSteps()->shouldBeCalled()->willReturn([$previousStep, $currentStep, $nextStep]);
         $process->countSteps()->shouldBeCalled()->willReturn(3);
@@ -64,7 +64,7 @@ final class ProcessContextSpec extends ObjectBehavior
         StepInterface $nextStep,
         ProcessValidatorInterface $processValidator
     ) {
-        $process->getScenarioAlias()->shouldBeCalled();
+        $process->getScenarioAlias()->willReturn('alias')->shouldBeCalled();
         $storage->initialize(Argument::type('string'))->shouldBeCalled();
         $process->getOrderedSteps()->shouldBeCalled()->willReturn([$previousStep, $currentStep, $nextStep]);
         $process->countSteps()->shouldBeCalled()->willReturn(3);
@@ -100,7 +100,7 @@ final class ProcessContextSpec extends ObjectBehavior
         StepInterface $firstStep,
         StepInterface $lastStep
     ) {
-        $process->getScenarioAlias()->shouldBeCalled();
+        $process->getScenarioAlias()->willReturn('alias')->shouldBeCalled();
         $storage->initialize(Argument::type('string'))->shouldBeCalled();
         $process->getOrderedSteps()->shouldBeCalled()->willReturn([$firstStep, $lastStep]);
         $process->countSteps()->shouldBeCalled()->willReturn(2);
@@ -116,7 +116,7 @@ final class ProcessContextSpec extends ObjectBehavior
         StepInterface $firstStep,
         StepInterface $lastStep
     ) {
-        $process->getScenarioAlias()->shouldBeCalled();
+        $process->getScenarioAlias()->willReturn('alias')->shouldBeCalled();
         $storage->initialize(Argument::type('string'))->shouldBeCalled();
         $process->getOrderedSteps()->shouldBeCalled()->willReturn([$firstStep, $lastStep]);
         $process->countSteps()->shouldBeCalled()->willReturn(2);
@@ -132,7 +132,7 @@ final class ProcessContextSpec extends ObjectBehavior
         StepInterface $firstStep,
         StepInterface $lastStep
     ) {
-        $process->getScenarioAlias()->shouldBeCalled();
+        $process->getScenarioAlias()->willReturn('alias')->shouldBeCalled();
         $storage->initialize(Argument::type('string'))->shouldBeCalled();
         $process->getOrderedSteps()->shouldBeCalled()->willReturn([$firstStep, $lastStep]);
         $process->countSteps()->shouldBeCalled()->willReturn(2);
@@ -175,7 +175,7 @@ final class ProcessContextSpec extends ObjectBehavior
         StepInterface $nextStep
     ) {
         $currentStep->getName()->willReturn('step_two');
-        $process->getScenarioAlias()->shouldBeCalled();
+        $process->getScenarioAlias()->willReturn('alias')->shouldBeCalled();
         $storage->initialize(Argument::type('string'))->shouldBeCalled();
         $process->getOrderedSteps()->shouldBeCalled()->willReturn([$previousStep, $currentStep, $nextStep]);
         $process->countSteps()->shouldBeCalled()->willReturn(2);

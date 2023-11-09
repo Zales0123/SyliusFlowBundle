@@ -11,14 +11,14 @@
 
 namespace Sylius\Bundle\FlowBundle\Storage;
 
-use Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 /**
  * Separate session bag to store flows data.
  *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
-class SessionFlowsBag extends NamespacedAttributeBag
+class SessionFlowsBag extends AttributeBag
 {
     const STORAGE_KEY = '_sylius_flow_bag';
     const NAME = '_sylius_flow_bag';
@@ -34,7 +34,7 @@ class SessionFlowsBag extends NamespacedAttributeBag
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return self::NAME;
     }

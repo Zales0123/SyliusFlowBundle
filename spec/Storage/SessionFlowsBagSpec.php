@@ -13,7 +13,7 @@ namespace spec\Sylius\Bundle\FlowBundle\Storage;
 
 use PhpSpec\ObjectBehavior;
 use Sylius\Bundle\FlowBundle\Storage\SessionFlowsBag;
-use Symfony\Component\HttpFoundation\Session\Attribute\NamespacedAttributeBag;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 final class SessionFlowsBagSpec extends ObjectBehavior
 {
@@ -24,7 +24,7 @@ final class SessionFlowsBagSpec extends ObjectBehavior
 
     function it_is_a_namespace_attribute_bag()
     {
-        $this->shouldHaveType(NamespacedAttributeBag::class);
+        $this->shouldHaveType(AttributeBag::class);
     }
 
     function it_has_a_name()
