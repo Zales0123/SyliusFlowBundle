@@ -22,7 +22,7 @@
     </parameters>
 
     <services>
-        <service id="sylius.controller.process" class="%sylius.controller.process.class%">
+        <service id="sylius.controller.process" class="%sylius.controller.process.class%" public="true">
             <argument type="service" id="sylius.process.coordinator" />
             <argument type="service" id="sylius.process.context" />
         </service>
