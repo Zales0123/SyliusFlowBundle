@@ -30,6 +30,5 @@ class SyliusFlowBundle extends Bundle
     {
         $container->addCompilerPass(new RegisterScenariosPass());
         $container->addCompilerPass(new RegisterStepsPass());
-        $container->addCompilerPass(new RegisterSessionBagsPass());
     }
 }
