@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -11,91 +13,53 @@
 
 namespace Sylius\Bundle\FlowBundle\Storage;
 
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 
 /**
- * Session storage.
- *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
 class SessionStorage extends AbstractStorage
 {
-    /**
-     * Session.
-     *
-     * @var SessionInterface
-     */
-    protected $session;
-
-    /**
-     * Constructor.
-     *
-     * @param SessionInterface $session
-     */
-    public function __construct(SessionInterface $session)
-    {
-        $this->session = $session;
+    public function __construct(
+        protected RequestStack $requestStack,
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function get($key, $default = null)
+    public function get($key, $default = null): mixed
     {
         return $this->getBag()->get($this->resolveKey($key), $default);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function set($key, $value)
+    public function set(string $key, string|array $value): void
     {
         $this->getBag()->set($this->resolveKey($key), $value);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function has($key)
+    public function has($key): bool
     {
         return $this->getBag()->has($this->resolveKey($key));
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function remove($key)
+    public function remove($key): void
     {
         $this->getBag()->remove($this->resolveKey($key));
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function clear()
+    public function clear(): void
     {
         $this->getBag()->remove($this->domain);
     }
 
-    /**
-     * Get session flows bag.
-     *
-     * @return SessionFlowsBag
-     */
-    private function getBag()
+    /** Get session flows bag. */
+    private function getBag(): SessionBagInterface
     {
-        return $this->session->getBag(SessionFlowsBag::NAME);
+        return $this->requestStack->getSession()->getBag(SessionFlowsBag::NAME);
     }
 
-    /**
-     * Resolve key for current domain.
-     *
-     * @param string $key
-     *
-     * @return string
-     */
-    private function resolveKey($key)
+    /** Resolve key for current domain. */
+    private function resolveKey(string $key): string
     {
-        return $this->domain.'/'.$key;
+        return $this->domain . '/' . $key;
     }
 }

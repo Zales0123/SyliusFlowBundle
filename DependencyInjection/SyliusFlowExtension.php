@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -11,7 +13,6 @@
 
 namespace Sylius\Bundle\FlowBundle\DependencyInjection;
 
-use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
@@ -24,13 +25,10 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class SyliusFlowExtension extends Extension
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function load(array $config, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
-        $config = $this->processConfiguration($this->getConfiguration($config, $container), $config);
-        $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config/container'));
+        $config = $this->processConfiguration($this->getConfiguration($configs, $container), $configs);
+        $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config/container'));
 
         $container->setAlias('sylius.process_storage', $config['storage']);
 

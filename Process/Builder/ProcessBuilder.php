@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -21,41 +23,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ProcessBuilder implements ProcessBuilderInterface
 {
-    /**
-     * Container.
-     *
-     * @var ContainerInterface
-     */
-    protected $container;
+    /** @var StepInterface[] */
+    protected array $steps;
 
-    /**
-     * Registered steps.
-     *
-     * @var StepInterface[]
-     */
-    protected $steps;
+    protected ProcessInterface $process;
 
-    /**
-     * Current process.
-     *
-     * @var ProcessInterface
-     */
-    protected $process;
-
-    /**
-     * Constructor.
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        protected ContainerInterface $container,
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function build(ProcessScenarioInterface $scenario)
+    public function build(ProcessScenarioInterface $scenario): ProcessInterface
     {
         $this->process = new Process();
 
@@ -64,10 +42,7 @@ class ProcessBuilder implements ProcessBuilderInterface
         return $this->process;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function add($name, $step)
+    public function add(string $name, $step): self
     {
         $this->assertHasProcess();
 
@@ -94,29 +69,20 @@ class ProcessBuilder implements ProcessBuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function remove($name)
+    public function remove($name): void
     {
         $this->assertHasProcess();
 
         $this->process->removeStep($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function has($name)
+    public function has(string $name): bool
     {
         $this->assertHasProcess();
 
         return $this->process->hasStep($name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDisplayRoute($route)
     {
         $this->assertHasProcess();
@@ -126,9 +92,6 @@ class ProcessBuilder implements ProcessBuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setDisplayRouteParams(array $params)
     {
         $this->assertHasProcess();
@@ -138,9 +101,6 @@ class ProcessBuilder implements ProcessBuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setForwardRoute($route)
     {
         $this->assertHasProcess();
@@ -150,9 +110,6 @@ class ProcessBuilder implements ProcessBuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setForwardRouteParams(array $params)
     {
         $this->assertHasProcess();
@@ -162,9 +119,6 @@ class ProcessBuilder implements ProcessBuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setRedirect($redirect)
     {
         $this->assertHasProcess();
@@ -174,9 +128,6 @@ class ProcessBuilder implements ProcessBuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setRedirectParams(array $params)
     {
         $this->assertHasProcess();
@@ -186,9 +137,6 @@ class ProcessBuilder implements ProcessBuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function validate($validator)
     {
         $this->assertHasProcess();
@@ -206,10 +154,7 @@ class ProcessBuilder implements ProcessBuilderInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function registerStep($alias, StepInterface $step)
+    public function registerStep($alias, StepInterface $step): void
     {
         if (isset($this->steps[$alias])) {
             throw new \InvalidArgumentException(sprintf('Flow step with alias "%s" is already registered', $alias));
@@ -218,10 +163,7 @@ class ProcessBuilder implements ProcessBuilderInterface
         $this->steps[$alias] = $step;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function loadStep($alias)
+    public function loadStep(string $alias): StepInterface
     {
         if (!isset($this->steps[$alias])) {
             throw new \InvalidArgumentException(sprintf('Flow step with alias "%s" is not registered', $alias));
@@ -235,7 +177,7 @@ class ProcessBuilder implements ProcessBuilderInterface
      *
      * @throws \RuntimeException
      */
-    protected function assertHasProcess()
+    protected function assertHasProcess(): void
     {
         if (!$this->process) {
             throw new \RuntimeException('Process is not set');

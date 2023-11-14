@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -12,22 +14,12 @@
 namespace Sylius\Bundle\FlowBundle\Storage;
 
 /**
- * Base storage class.
- *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
 abstract class AbstractStorage implements StorageInterface
 {
-    /**
-     * Storage domain.
-     *
-     * @var string
-     */
-    protected $domain;
+    protected string $domain;
 
-    /**
-     * {@inheritdoc}
-     */
     public function initialize($domain)
     {
         $this->domain = $domain;

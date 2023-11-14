@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -14,26 +16,19 @@ namespace Sylius\Bundle\FlowBundle\Storage;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 /**
- * Separate session bag to store flows data.
- *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
 class SessionFlowsBag extends AttributeBag
 {
-    const STORAGE_KEY = '_sylius_flow_bag';
-    const NAME = '_sylius_flow_bag';
+    final public const STORAGE_KEY = '_sylius_flow_bag';
 
-    /**
-     * Constructor.
-     */
+    final public const NAME = '_sylius_flow_bag';
+
     public function __construct()
     {
         parent::__construct(self::STORAGE_KEY);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getName(): string
     {
         return self::NAME;

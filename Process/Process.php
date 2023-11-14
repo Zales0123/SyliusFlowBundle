@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -16,126 +18,66 @@ use Sylius\Bundle\FlowBundle\Process\Step\StepInterface;
 use Sylius\Bundle\FlowBundle\Validator\ProcessValidatorInterface;
 
 /**
- * Base class for process.
- *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
 class Process implements ProcessInterface
 {
-    /**
-     * Process scenario alias.
-     *
-     * @var string
-     */
-    protected $scenarioAlias;
+    protected string $scenarioAlias;
 
-    /**
-     * Steps.
-     *
-     * @var StepInterface[]
-     */
-    protected $steps = [];
+    /** @var StepInterface[] */
+    protected array $steps = [];
 
-    /**
-     * Ordered steps.
-     *
-     * @var StepInterface[]
-     */
-    protected $orderedSteps = [];
+    /** @var StepInterface[] */
+    protected array $orderedSteps = [];
 
-    /**
-     * @var ProcessValidatorInterface
-     */
-    protected $validator;
+    protected ?ProcessValidatorInterface $validator = null;
 
-    /**
-     * Display action route.
-     *
-     * @var string
-     */
-    protected $displayRoute;
+    /** Display action route. */
+    protected string $displayRoute;
 
-    /**
-     * Display action route params.
-     *
-     * @var array
-     */
-    protected $displayRouteParams = [];
+    /** Display action route params. */
+    protected array $displayRouteParams = [];
 
-    /**
-     * Forward action route.
-     *
-     * @var string
-     */
-    protected $forwardRoute;
+    /** Forward action route. */
+    protected string $forwardRoute;
 
-    /**
-     * Forward action route params.
-     *
-     * @var array
-     */
-    protected $forwardRouteParams = [];
+    /** Forward action route params. */
+    protected array $forwardRouteParams = [];
 
-    /**
-     * Redirect route.
-     *
-     * @var string
-     */
-    protected $redirect;
+    /** Redirect route. */
+    protected string $redirect;
 
-    /**
-     * Redirect route params.
-     *
-     * @var array
-     */
-    protected $redirectParams = [];
+    /** Redirect route params. */
+    protected array $redirectParams = [];
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getScenarioAlias()
+    public function getScenarioAlias(): string
     {
         return $this->scenarioAlias;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setScenarioAlias($scenarioAlias)
+    public function setScenarioAlias($scenarioAlias): void
     {
         $this->scenarioAlias = $scenarioAlias;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getSteps()
+    public function getSteps(): array
     {
         return $this->steps;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setSteps(array $steps)
+    public function setSteps(array $steps): void
     {
         foreach ($steps as $name => $step) {
             $this->addStep($name, $step);
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getOrderedSteps()
+    public function getOrderedSteps(): array
     {
         return $this->orderedSteps;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getStepByIndex($index)
+    public function getStepByIndex($index): StepInterface
     {
         if (!isset($this->orderedSteps[$index])) {
             throw new InvalidArgumentException(sprintf('Step with index %d. does not exist', $index));
@@ -144,46 +86,31 @@ class Process implements ProcessInterface
         return $this->orderedSteps[$index];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getStepByName($name)
+    public function getStepByName(string $index): StepInterface
     {
-        if (!$this->hasStep($name)) {
-            throw new InvalidArgumentException(sprintf('Step with name "%s" does not exist', $name));
+        if (!$this->hasStep($index)) {
+            throw new InvalidArgumentException(sprintf('Step with name "%s" does not exist', $index));
         }
 
-        return $this->steps[$name];
+        return $this->steps[$index];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getFirstStep()
+    public function getFirstStep(): StepInterface
     {
         return $this->getStepByIndex(0);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getLastStep()
+    public function getLastStep(): StepInterface
     {
         return $this->getStepByIndex($this->countSteps() - 1);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function countSteps()
+    public function countSteps(): int
     {
         return count($this->steps);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addStep($name, StepInterface $step)
+    public function addStep($name, StepInterface $step): void
     {
         if ($this->hasStep($name)) {
             throw new InvalidArgumentException(sprintf('Step with name "%s" already exists', $name));
@@ -196,10 +123,7 @@ class Process implements ProcessInterface
         $this->steps[$name] = $this->orderedSteps[] = $step;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function removeStep($name)
+    public function removeStep($name): void
     {
         if (!$this->hasStep($name)) {
             throw new InvalidArgumentException(sprintf('Step with name "%s" does not exist', $name));
@@ -211,122 +135,77 @@ class Process implements ProcessInterface
         $this->orderedSteps = array_values($this->orderedSteps); //keep sequential index intact
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function hasStep($name)
+    public function hasStep($name): bool
     {
         return isset($this->steps[$name]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getDisplayRoute()
+    public function getDisplayRoute(): string
     {
         return $this->displayRoute;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setDisplayRoute($route)
+    public function setDisplayRoute($route): void
     {
         $this->displayRoute = $route;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getDisplayRouteParams()
+    public function getDisplayRouteParams(): array
     {
         return $this->displayRouteParams;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setDisplayRouteParams(array $params)
+    public function setDisplayRouteParams(array $params): void
     {
         $this->displayRouteParams = $params;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getForwardRoute()
+    public function getForwardRoute(): string
     {
         return $this->forwardRoute;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setForwardRoute($route)
+    public function setForwardRoute($route): void
     {
         $this->forwardRoute = $route;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getForwardRouteParams()
+    public function getForwardRouteParams(): array
     {
         return $this->forwardRouteParams;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setForwardRouteParams(array $params)
+    public function setForwardRouteParams(array $params): void
     {
         $this->forwardRouteParams = $params;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getRedirect()
+    public function getRedirect(): string
     {
         return $this->redirect;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setRedirect($redirect)
+    public function setRedirect($redirect): void
     {
         $this->redirect = $redirect;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getRedirectParams()
+    public function getRedirectParams(): array
     {
         return $this->redirectParams;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setRedirectParams(array $params)
+    public function setRedirectParams(array $params): void
     {
         $this->redirectParams = $params;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getValidator()
+    public function getValidator(): ?ProcessValidatorInterface
     {
         return $this->validator;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setValidator(ProcessValidatorInterface $validator)
+    public function setValidator(ProcessValidatorInterface $validator): void
     {
         $this->validator = $validator;
     }

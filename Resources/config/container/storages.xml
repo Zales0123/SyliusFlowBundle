@@ -24,7 +24,7 @@
 
     <services>
         <service id="sylius.process_storage.session" class="%sylius.process_storage.session.class%">
-            <argument type="service" id="session" />
+            <argument type="service" id="request_stack" />
         </service>
         <service id="sylius.process_storage.session.bag" class="%sylius.process_storage.session.bag.class%" />
     </services>

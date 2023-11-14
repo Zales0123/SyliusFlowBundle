@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -25,32 +27,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ProcessController
 {
-    /**
-     * @var CoordinatorInterface
-     */
-    protected $processCoordinator;
-
-    /**
-     * @var ProcessContextInterface
-     */
-    protected $processContext;
-
-    public function __construct(CoordinatorInterface $processCoordinator, ProcessContextInterface $processContext)
+    public function __construct(protected CoordinatorInterface $processCoordinator, protected ProcessContextInterface $processContext)
     {
-        $this->processCoordinator = $processCoordinator;
-        $this->processContext = $processContext;
     }
 
     /**
      * Build and start process for given scenario.
      * This action usually redirects to first step.
-     *
-     * @param Request $request
-     * @param string  $scenarioAlias
-     *
-     * @return Response
      */
-    public function startAction(Request $request, $scenarioAlias)
+    public function startAction(Request $request, string $scenarioAlias): Response
     {
         return $this->processCoordinator->start($scenarioAlias, $request->query);
     }
@@ -58,15 +43,9 @@ class ProcessController
     /**
      * Execute display action of given step.
      *
-     * @param Request $request
-     * @param string  $scenarioAlias
-     * @param string  $stepName
-     *
      * @throws NotFoundHttpException
-     *
-     * @return Response
      */
-    public function displayAction(Request $request, $scenarioAlias, $stepName)
+    public function displayAction(Request $request, string $scenarioAlias, string $stepName): Response
     {
         $this->processContext->setRequest($request);
 
@@ -77,16 +56,8 @@ class ProcessController
         }
     }
 
-    /**
-     * Execute continue action of given step.
-     *
-     * @param Request $request
-     * @param string  $scenarioAlias
-     * @param string  $stepName
-     *
-     * @return Response
-     */
-    public function forwardAction(Request $request, $scenarioAlias, $stepName)
+    /** Execute continue action of given step. */
+    public function forwardAction(Request $request, string $scenarioAlias, string $stepName): Response
     {
         $this->processContext->setRequest($request);
 

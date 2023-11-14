@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -23,10 +25,6 @@ use Sylius\Bundle\FlowBundle\Process\Builder\ProcessBuilderInterface;
  */
 interface ProcessScenarioInterface
 {
-    /**
-     * Builds the whole process.
-     *
-     * @param ProcessBuilderInterface $builder
-     */
+    /** Builds the whole process. */
     public function build(ProcessBuilderInterface $builder);
 }

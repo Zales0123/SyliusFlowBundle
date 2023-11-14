@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -15,208 +17,91 @@ use Sylius\Bundle\FlowBundle\Process\Step\StepInterface;
 use Sylius\Bundle\FlowBundle\Validator\ProcessValidatorInterface;
 
 /**
- * Interface for setup object.
- *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
 interface ProcessInterface
 {
-    /**
-     * Get scenario alias.
-     *
-     * @return string
-     */
-    public function getScenarioAlias();
+    public function getScenarioAlias(): string;
 
-    /**
-     * Set scenario alias.
-     *
-     * @param string $scenarioAlias
-     */
-    public function setScenarioAlias($scenarioAlias);
+    public function setScenarioAlias(string $scenarioAlias);
 
-    /**
-     * Get a collection of steps.
-     * Keys will be step names.
-     *
-     * @return StepInterface[]
-     */
-    public function getSteps();
+    /** @return StepInterface[] */
+    public function getSteps(): array;
 
-    /**
-     * Set steps.
-     *
-     * @param StepInterface[] $steps
-     */
+    /** @param StepInterface[] $steps */
     public function setSteps(array $steps);
 
-    /**
-     * Get steps in correct order.
-     *
-     * @return StepInterface[]
-     */
-    public function getOrderedSteps();
+    /** @return StepInterface[] */
+    public function getOrderedSteps(): array;
 
-    /**
-     * Get first process step.
-     *
-     * @return StepInterface
-     */
-    public function getFirstStep();
+    /** Get first process step. */
+    public function getFirstStep(): StepInterface;
 
-    /**
-     * Get last step.
-     *
-     * @return StepInterface
-     */
-    public function getLastStep();
+    /** Get last step. */
+    public function getLastStep(): StepInterface;
 
-    /**
-     * Add step and name it.
-     *
-     * @param string        $name
-     * @param StepInterface $step
-     */
-    public function addStep($name, StepInterface $step);
+    /** Add step and name it. */
+    public function addStep(string $name, StepInterface $step);
 
-    /**
-     * Remove step.
-     *
-     * @param string $name
-     */
-    public function removeStep($name);
+    /** Remove step. */
+    public function removeStep(string $name);
 
-    /**
-     * Has step with given name?
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function hasStep($name);
+    /** Has step with given name? */
+    public function hasStep(string $name): bool;
 
-    /**
-     * Count all steps.
-     *
-     * @return int
-     */
-    public function countSteps();
+    /** Count all steps. */
+    public function countSteps(): int;
 
-    /**
-     * Get validator.
-     *
-     * @return ProcessValidatorInterface
-     */
-    public function getValidator();
+    /** Get validator. */
+    public function getValidator(): ?ProcessValidatorInterface;
 
     /**
      * Set validator.
      *
-     * @param ProcessValidatorInterface $validator
      *
      * @return $this
      */
     public function setValidator(ProcessValidatorInterface $validator);
 
-    /**
-     * Get redirection after complete.
-     *
-     * @return string
-     */
-    public function getRedirect();
+    /** Get redirection after complete. */
+    public function getRedirect(): string;
 
-    /**
-     * Set redirection after complete.
-     *
-     * @param string $redirect
-     */
-    public function setRedirect($redirect);
+    /** Set redirection after complete. */
+    public function setRedirect(string $redirect);
 
-    /**
-     * Get redirection route params after complete.
-     *
-     * @return array
-     */
-    public function getRedirectParams();
+    /** Get redirection route params after complete. */
+    public function getRedirectParams(): array;
 
-    /**
-     * Set redirection route params after complete.
-     *
-     * @param array $params
-     */
+    /** Set redirection route params after complete. */
     public function setRedirectParams(array $params);
 
-    /**
-     * Get display route.
-     *
-     * @return string
-     */
-    public function getDisplayRoute();
+    /** Get display route. */
+    public function getDisplayRoute(): string;
 
-    /**
-     * Set display route.
-     *
-     * @param string $route
-     */
-    public function setDisplayRoute($route);
+    /** Set display route. */
+    public function setDisplayRoute(string $route);
 
-    /**
-     * Get additional display route parameters.
-     *
-     * @return array
-     */
-    public function getDisplayRouteParams();
+    /** Get additional display route parameters. */
+    public function getDisplayRouteParams(): array;
 
-    /**
-     * Set additional display route params.
-     *
-     * @param array $params
-     */
+    /** Set additional display route params. */
     public function setDisplayRouteParams(array $params);
 
-    /**
-     * Get forward route.
-     *
-     * @return string
-     */
-    public function getForwardRoute();
+    /** Get forward route. */
+    public function getForwardRoute(): string;
 
-    /**
-     * Set forward route.
-     *
-     * @param string $route
-     */
-    public function setForwardRoute($route);
+    /** Set forward route. */
+    public function setForwardRoute(string $route);
 
-    /**
-     * Get additional forward route parameters.
-     *
-     * @return array
-     */
-    public function getForwardRouteParams();
+    /** Get additional forward route parameters. */
+    public function getForwardRouteParams(): array;
 
-    /**
-     * Set additional forward route params.
-     *
-     * @param array $params
-     */
+    /** Set additional forward route params. */
     public function setForwardRouteParams(array $params);
 
-    /**
-     * Get step by index/order.
-     *
-     * @param int $index
-     *
-     * @return StepInterface
-     */
-    public function getStepByIndex($index);
+    /** Get step by index/order. */
+    public function getStepByIndex(int $index): StepInterface;
 
-    /**
-     * Get step by name.
-     *
-     * @param string $index
-     *
-     * @return StepInterface
-     */
-    public function getStepByName($index);
+    /** Get step by name. */
+    public function getStepByName(string $index): StepInterface;
 }

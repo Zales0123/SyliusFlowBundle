@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -21,11 +23,10 @@ interface StorageInterface
     /**
      * Initializes storage for given domain.
      *
-     * @param string $domain
      *
      * @return $this
      */
-    public function initialize($domain);
+    public function initialize(string $domain);
 
     /**
      * Checks if the storage has a value for a key.
@@ -34,17 +35,16 @@ interface StorageInterface
      *
      * @return bool Whether the storage has a value for this key
      */
-    public function has($key);
+    public function has(string $key): bool;
 
     /**
      * Returns the value for a key.
      *
      * @param string $key     A unique key
-     * @param mixed  $default
      *
      * @return mixed|null The value in the storage or default if set or null if not found
      */
-    public function get($key, $default = null);
+    public function get(string $key, $default = null): mixed;
 
     /**
      * Sets a value in the storage.
@@ -52,17 +52,15 @@ interface StorageInterface
      * @param string $key   A unique key
      * @param string $value The value to storage
      */
-    public function set($key, $value);
+    public function set(string $key, string|array $value);
 
     /**
      * Removes a value from the storage.
      *
      * @param string $key A unique key
      */
-    public function remove($key);
+    public function remove(string $key);
 
-    /**
-     * Clears all values from current domain.
-     */
+    /** Clears all values from current domain. */
     public function clear();
 }

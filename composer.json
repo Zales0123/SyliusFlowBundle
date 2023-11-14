@@ -20,16 +20,22 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "^8.1",
 
-        "symfony/framework-bundle": "^6.3"
+        "symfony/framework-bundle": "^6.3",
+        "friendsofsymfony/rest-bundle": "^3.6"
     },
     "require-dev": {
         "phpspec/phpspec": "^7.0",
+        "rector/rector": "^0.17.6",
+        "sylius-labs/coding-standard": "^4.3",
         "symfony/yaml": "^6.3"
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": false
+        }
     },
     "autoload": {
         "psr-4": { "Sylius\\Bundle\\FlowBundle\\": "" }
@@ -49,5 +55,11 @@
         "branch-alias": {
             "dev-master": "1.0-dev"
         }
+    },
+    "scripts": {
+        "fix": [
+            "bin/rector process --clear-cache",
+            "bin/ecs --fix --clear-cache"
+        ]
     }
 }

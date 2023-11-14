@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -20,57 +22,35 @@ use Sylius\Bundle\FlowBundle\Process\Context\ProcessContextInterface;
  */
 abstract class AbstractStep implements StepInterface
 {
-    /**
-     * Step name in current scenario.
-     *
-     * @var string
-     */
-    protected $name;
+    /** Step name in current scenario. */
+    protected ?string $name = null;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function forwardAction(ProcessContextInterface $context)
     {
         return $this->complete();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isActive()
+    public function isActive(): bool
     {
         return true;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function complete()
+    public function complete(): ActionResult
     {
         return new ActionResult();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function proceed($nextStepName)
+    public function proceed($nextStepName): ActionResult
     {
         return new ActionResult($nextStepName);
     }

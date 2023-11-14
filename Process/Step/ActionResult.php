@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -17,17 +19,12 @@ namespace Sylius\Bundle\FlowBundle\Process\Step;
  */
 class ActionResult
 {
-    private $stepName;
-
-    public function __construct($stepName = null)
+    public function __construct(private $stepName = null)
     {
-        $this->stepName = $stepName;
     }
 
-    /**
-     * @return string|null The name of the next step.
-     */
-    public function getNextStepName()
+    /** @return string|null The name of the next step. */
+    public function getNextStepName(): ?string
     {
         return $this->stepName;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -22,12 +24,12 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class RegisterSessionBagsPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
-        $session = $container->getDefinition('session');
-        $session->addMethodCall('registerBag', [new Reference('sylius.process_storage.session.bag')]);
+        $session = $container->getDefinition('request_stack');
+        $session
+            ->addMethodCall('getSession')
+            ->addMethodCall('registerBag', [new Reference('sylius.process_storage.session.bag')])
+        ;
     }
 }

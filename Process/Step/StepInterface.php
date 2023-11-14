@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -17,58 +19,24 @@ use Symfony\Component\HttpFoundation\Response;
 
 interface StepInterface
 {
-    /**
-     * Get step name in current scenario.
-     *
-     * @return string
-     */
-    public function getName();
+    /** Get step name in current scenario. */
+    public function getName(): ?string;
 
-    /**
-     * Set step name.
-     *
-     * @param string $name
-     */
-    public function setName($name);
+    /** Set step name. */
+    public function setName(string $name);
 
-    /**
-     * Display action.
-     *
-     * @param ProcessContextInterface $context
-     *
-     * @return ActionResult|Response|View
-     */
+    /** @return ActionResult|Response|View */
     public function displayAction(ProcessContextInterface $context);
 
-    /**
-     * Forward action.
-     *
-     * @param ProcessContextInterface $context
-     *
-     * @return null|ActionResult|Response|View
-     */
+    /** @return ActionResult|Response|View|null */
     public function forwardAction(ProcessContextInterface $context);
 
-    /**
-     * Is step active in process?
-     *
-     * @return bool
-     */
-    public function isActive();
+    /** Is step active in process? */
+    public function isActive(): bool;
 
-    /**
-     * Proceeds to the next step.
-     *
-     * @return ActionResult
-     */
-    public function complete();
+    /** Proceeds to the next step. */
+    public function complete(): ActionResult;
 
-    /**
-     * Proceeds to the given step.
-     *
-     * @param string $nextStepName
-     *
-     * @return ActionResult
-     */
-    public function proceed($nextStepName);
+    /** Proceeds to the given step. */
+    public function proceed(string $nextStepName): ActionResult;
 }

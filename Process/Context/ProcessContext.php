@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -14,85 +16,34 @@ namespace Sylius\Bundle\FlowBundle\Process\Context;
 use Sylius\Bundle\FlowBundle\Process\ProcessInterface;
 use Sylius\Bundle\FlowBundle\Process\Step\StepInterface;
 use Sylius\Bundle\FlowBundle\Storage\StorageInterface;
+use Sylius\Bundle\FlowBundle\Validator\ProcessValidatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * Process context.
- *
  * @author Paweł Jędrzejewski <pawel@sylius.org>
  */
 class ProcessContext implements ProcessContextInterface
 {
-    /**
-     * Process.
-     *
-     * @var ProcessInterface
-     */
-    protected $process;
+    protected ProcessInterface $process;
 
-    /**
-     * Current step.
-     *
-     * @var StepInterface
-     */
-    protected $currentStep;
+    protected ?StepInterface $currentStep = null;
 
-    /**
-     * Previous step.
-     *
-     * @var StepInterface
-     */
-    protected $previousStep;
+    protected ?StepInterface $previousStep = null;
 
-    /**
-     * Next step.
-     *
-     * @var StepInterface
-     */
-    protected $nextStep;
+    protected ?StepInterface $nextStep = null;
 
-    /**
-     * Storage.
-     *
-     * @var StorageInterface
-     */
-    protected $storage;
+    protected Request $request;
 
-    /**
-     * Request.
-     *
-     * @var Request
-     */
-    protected $request;
+    protected int $progress = 0;
 
-    /**
-     * Progress in percents.
-     *
-     * @var int
-     */
-    protected $progress = 0;
+    protected bool $initialized = false;
 
-    /**
-     * Was the context initialized?
-     *
-     * @var bool
-     */
-    protected $initialized = false;
-
-    /**
-     * Constructor.
-     *
-     * @param StorageInterface $storage
-     */
-    public function __construct(StorageInterface $storage)
-    {
-        $this->storage = $storage;
+    public function __construct(
+        protected StorageInterface $storage,
+    ) {
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function initialize(ProcessInterface $process, StepInterface $currentStep)
     {
         $this->process = $process;
@@ -104,8 +55,8 @@ class ProcessContext implements ProcessContextInterface
 
         foreach ($steps as $index => $step) {
             if ($step === $currentStep) {
-                $this->previousStep = isset($steps[$index - 1]) ? $steps[$index - 1] : null;
-                $this->nextStep = isset($steps[$index + 1]) ? $steps[$index + 1] : null;
+                $this->previousStep = $steps[$index - 1] ?? null;
+                $this->nextStep = $steps[$index + 1] ?? null;
 
                 $this->calculateProgress($index);
             }
@@ -116,166 +67,115 @@ class ProcessContext implements ProcessContextInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isValid()
+    public function isValid(): bool
     {
         $this->assertInitialized();
 
         $validator = $this->process->getValidator();
 
-        if (null !== $validator) {
+        if ($validator instanceof ProcessValidatorInterface) {
             return $validator->isValid($this);
         }
 
         $history = $this->getStepHistory();
 
-        return 0 === count($history) || in_array($this->currentStep->getName(), $history);
+        return 0 === (is_countable($history) ? count($history) : 0) || in_array($this->currentStep->getName(), $history);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getProcess()
+    public function getProcess(): ProcessInterface
     {
         $this->assertInitialized();
 
         return $this->process;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getCurrentStep()
+    public function getCurrentStep(): StepInterface
     {
         $this->assertInitialized();
 
         return $this->currentStep;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getPreviousStep()
+    public function getPreviousStep(): StepInterface
     {
         $this->assertInitialized();
 
         return $this->previousStep;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getNextStep()
+    public function getNextStep(): StepInterface
     {
         $this->assertInitialized();
 
         return $this->nextStep;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isFirstStep()
+    public function isFirstStep(): bool
     {
         $this->assertInitialized();
 
-        return null === $this->previousStep;
+        return !$this->previousStep instanceof StepInterface;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isLastStep()
+    public function isLastStep(): bool
     {
         $this->assertInitialized();
 
-        return null === $this->nextStep;
+        return !$this->nextStep instanceof StepInterface;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function close()
+    public function close(): void
     {
         $this->assertInitialized();
 
         $this->storage->clear();
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getRequest()
+    public function getRequest(): Request
     {
         return $this->request;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): void
     {
         $this->request = $request;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getStorage()
+    public function getStorage(): StorageInterface
     {
         return $this->storage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setStorage(StorageInterface $storage)
+    public function setStorage(StorageInterface $storage): void
     {
         $this->storage = $storage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getProgress()
+    public function getProgress(): int
     {
         $this->assertInitialized();
 
         return $this->progress;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getStepHistory()
+    public function getStepHistory(): array
     {
         return $this->storage->get('history', []);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setStepHistory(array $history)
+    public function setStepHistory(array $history): void
     {
         $this->storage->set('history', $history);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function addStepToHistory($stepName)
+    public function addStepToHistory($stepName): void
     {
         $history = $this->getStepHistory();
-        array_push($history, $stepName);
+        $history[] = $stepName;
         $this->setStepHistory($history);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function rewindHistory()
+    public function rewindHistory(): void
     {
         $history = $this->getStepHistory();
 
@@ -287,19 +187,16 @@ class ProcessContext implements ProcessContextInterface
             }
         }
 
-        if (0 === count($history)) {
+        if (0 === (is_countable($history) ? count($history) : 0)) {
             throw new NotFoundHttpException(sprintf('Step "%s" not found in step history.', $this->currentStep->getName()));
         }
 
         $this->setStepHistory($history);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setNextStepByName($stepName)
+    public function setNextStepByName(string $stepAlias): void
     {
-        $this->nextStep = $this->process->getStepByName($stepName);
+        $this->nextStep = $this->process->getStepByName($stepAlias);
     }
 
     /**
@@ -307,20 +204,15 @@ class ProcessContext implements ProcessContextInterface
      *
      * @throws \RuntimeException
      */
-    protected function assertInitialized()
+    protected function assertInitialized(): void
     {
         if (!$this->initialized) {
             throw new \RuntimeException('Process context was not initialized');
         }
     }
 
-    /**
-     * Calculates progress based on current step index.
-     *
-     * @param int $currentStepIndex
-     */
-    protected function calculateProgress($currentStepIndex)
+    protected function calculateProgress(int $currentStepIndex): void
     {
-        $this->progress = floor(($currentStepIndex + 1) / $this->process->countSteps() * 100);
+        $this->progress = (int) floor(($currentStepIndex + 1) / $this->process->countSteps() * 100);
     }
 }

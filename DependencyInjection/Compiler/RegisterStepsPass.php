@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -22,10 +24,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class RegisterStepsPass implements CompilerPassInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $processBuilder = $container->getDefinition('sylius.process.builder');
 

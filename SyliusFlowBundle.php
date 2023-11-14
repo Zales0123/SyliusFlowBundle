@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -24,10 +26,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 class SyliusFlowBundle extends Bundle
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new RegisterScenariosPass());
         $container->addCompilerPass(new RegisterStepsPass());

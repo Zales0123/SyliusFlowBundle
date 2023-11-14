@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -18,58 +20,26 @@ use Sylius\Bundle\FlowBundle\Process\Step\StepInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Interface for process validation.
- *
  * @author Zach Badgett <zach.badgett@gmail.com>
  * @author Saša Stamenković <umpirsky@gmail.com>
  */
 interface ProcessValidatorInterface
 {
-    /**
-     * Message to display on invalid.
-     *
-     * @param string $message
-     *
-     * @return ProcessValidatorInterface
-     */
-    public function setMessage($message);
+    /** Message to display on invalid. */
+    public function setMessage(string $message): self;
 
-    /**
-     * Return message.
-     *
-     * @return string
-     */
-    public function getMessage();
+    /** Return message. */
+    public function getMessage(): string;
 
-    /**
-     * Set step name to go on error.
-     *
-     * @param string $stepName
-     *
-     * @return ProcessValidatorInterface
-     */
-    public function setStepName($stepName);
+    /** Set step name to go on error. */
+    public function setStepName(string $stepName): self;
 
-    /**
-     * Return step name to go on error.
-     *
-     * @return string
-     */
-    public function getStepName();
+    /** Return step name to go on error. */
+    public function getStepName(): string;
 
-    /**
-     * Check validation.
-     *
-     * @param ProcessContextInterface $processContext
-     *
-     * @return bool
-     */
-    public function isValid(ProcessContextInterface $processContext);
+    /** Check validation. */
+    public function isValid(ProcessContextInterface $processContext): bool;
 
-    /**
-     * @param StepInterface $step
-     *
-     * @return ActionResult|Response|View
-     */
+    /** @return ActionResult|Response|View */
     public function getResponse(StepInterface $step);
 }

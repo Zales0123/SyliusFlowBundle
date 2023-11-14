@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -15,109 +17,65 @@ use Sylius\Bundle\FlowBundle\Process\Context\ProcessContextInterface;
 use Sylius\Bundle\FlowBundle\Process\Step\StepInterface;
 
 /**
- * Default process validator.
- *
  * @author Zach Badgett <zach.badgett@gmail.com>
  * @author Saša Stamenković <umpirsky@gmail.com>
  */
 class ProcessValidator implements ProcessValidatorInterface
 {
-    /**
-     * @var string|null
-     */
-    protected $message;
-
-    /**
-     * @var string|null
-     */
-    protected $stepName;
-
-    /**
-     * @var callable
-     */
+    /** @var callable */
     protected $validation;
 
-    public function __construct($message = null, $stepName = null, \Closure $validation = null)
+    public function __construct(protected ?string $message = null, protected ?string $stepName = null, ?\Closure $validation = null)
     {
-        $this->message = $message;
-        $this->stepName = $stepName;
         $this->validation = $validation;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setStepName($stepName)
+    public function setStepName($stepName): self
     {
         $this->stepName = $stepName;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getStepName()
+    public function getStepName(): string
     {
         return $this->stepName;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setMessage($message)
+    public function setMessage($message): self
     {
         $this->message = $message;
 
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
 
-    /**
-     * Set validation.
-     *
-     * @param callable $validation
-     *
-     * @return $this
-     */
-    public function setValidation(\Closure $validation)
+    /** @param callable $validation */
+    public function setValidation(\Closure $validation): self
     {
         $this->validation = $validation;
 
         return $this;
     }
 
-    /**
-     * Get validation.
-     *
-     * @return callable
-     */
-    public function getValidation()
+    /** Get validation. */
+    public function getValidation(): callable
     {
         return $this->validation;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isValid(ProcessContextInterface $processContext)
+    public function isValid(ProcessContextInterface $processContext): bool
     {
-        return call_user_func($this->validation) ? true : false;
+        return (bool) call_user_func($this->validation);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getResponse(StepInterface $step)
     {
-        if ($this->getStepName()) {
+        if ($this->getStepName() !== '' && $this->getStepName() !== '0') {
             return $step->proceed($this->getStepName());
         }
 

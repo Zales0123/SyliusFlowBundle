@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Sylius package.
  *
@@ -24,130 +26,59 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 interface ProcessContextInterface
 {
-    /**
-     * Initialize context with process and current step.
-     *
-     * @param ProcessInterface $process
-     * @param StepInterface    $currentStep
-     */
+    /** Initialize context with process and current step. */
     public function initialize(ProcessInterface $process, StepInterface $currentStep);
 
-    /**
-     * Get process.
-     *
-     * @return ProcessInterface
-     */
-    public function getProcess();
+    /** Get process. */
+    public function getProcess(): ProcessInterface;
 
-    /**
-     * Get current step.
-     *
-     * @return StepInterface
-     */
-    public function getCurrentStep();
+    /** Get current step. */
+    public function getCurrentStep(): StepInterface;
 
-    /**
-     * Get previous step.
-     *
-     * @return StepInterface
-     */
-    public function getPreviousStep();
+    /** Get previous step. */
+    public function getPreviousStep(): StepInterface;
 
-    /**
-     * Get next step.
-     *
-     * @return StepInterface
-     */
-    public function getNextStep();
+    /** Get next step. */
+    public function getNextStep(): StepInterface;
 
-    /**
-     * Is current step the first step?
-     *
-     * @return bool
-     */
-    public function isFirstStep();
+    /** Is current step the first step? */
+    public function isFirstStep(): bool;
 
-    /**
-     * Is current step the last step?
-     *
-     * @return bool
-     */
-    public function isLastStep();
+    /** Is current step the last step? */
+    public function isLastStep(): bool;
 
-    /**
-     * Override the default next step.
-     *
-     * @param string $stepAlias
-     */
-    public function setNextStepByName($stepAlias);
+    /** Override the default next step. */
+    public function setNextStepByName(string $stepAlias);
 
-    /**
-     * Close context and clear all the data.
-     */
+    /** Close context and clear all the data. */
     public function close();
 
-    /**
-     * Is current flow valid?
-     *
-     * @return bool
-     */
-    public function isValid();
+    /** Is current flow valid? */
+    public function isValid(): bool;
 
-    /**
-     * Get storage.
-     *
-     * @return StorageInterface
-     */
-    public function getStorage();
+    /** Get storage. */
+    public function getStorage(): StorageInterface;
 
-    /**
-     * Set storage.
-     *
-     * @param StorageInterface $storage
-     */
+    /** Set storage. */
     public function setStorage(StorageInterface $storage);
 
-    /**
-     * Get current request.
-     *
-     * @return Request
-     */
-    public function getRequest();
+    /** Get current request. */
+    public function getRequest(): Request;
 
-    /**
-     * Set current request.
-     *
-     * @param Request $request
-     */
+    /** Set current request. */
     public function setRequest(Request $request);
 
-    /**
-     * Get progress in percents.
-     *
-     * @return int
-     */
-    public function getProgress();
+    /** Get progress in percents. */
+    public function getProgress(): int;
 
-    /**
-     * The array contains the history of all the step names.
-     *
-     * @return array
-     */
-    public function getStepHistory();
+    /** The array contains the history of all the step names. */
+    public function getStepHistory(): array;
 
-    /**
-     * Set a new history of step names.
-     *
-     * @param array $history
-     */
+    /** Set a new history of step names. */
     public function setStepHistory(array $history);
 
-    /**
-     * Add the given name to the history of step names.
-     *
-     * @param string $stepName
-     */
-    public function addStepToHistory($stepName);
+    /** Add the given name to the history of step names. */
+    public function addStepToHistory(string $stepName);
 
     /**
      * Goes back from the end fo the history and deletes all step names until the current one is found.
