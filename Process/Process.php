@@ -33,7 +33,7 @@ class Process implements ProcessInterface
     protected ?ProcessValidatorInterface $validator = null;
 
     /** Display action route. */
-    protected string $displayRoute;
+    protected ?string $displayRoute = null;
 
     /** Display action route params. */
     protected array $displayRouteParams = [];
@@ -140,7 +140,7 @@ class Process implements ProcessInterface
         return isset($this->steps[$name]);
     }
 
-    public function getDisplayRoute(): string
+    public function getDisplayRoute(): ?string
     {
         return $this->displayRoute;
     }

@@ -93,7 +93,7 @@ class Coordinator implements CoordinatorInterface
         );
     }
 
-    public function processStepResult(ProcessInterface $process, $result): RedirectResponse
+    public function processStepResult(ProcessInterface $process, $result): RedirectResponse|Response
     {
         if ($result instanceof Response || $result instanceof View) {
             return $result;

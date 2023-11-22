@@ -76,7 +76,7 @@ interface ProcessInterface
     public function setRedirectParams(array $params);
 
     /** Get display route. */
-    public function getDisplayRoute(): string;
+    public function getDisplayRoute(): ?string;
 
     /** Set display route. */
     public function setDisplayRoute(string $route);

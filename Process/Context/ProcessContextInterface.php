@@ -33,13 +33,13 @@ interface ProcessContextInterface
     public function getProcess(): ProcessInterface;
 
     /** Get current step. */
-    public function getCurrentStep(): StepInterface;
+    public function getCurrentStep(): ?StepInterface;
 
     /** Get previous step. */
-    public function getPreviousStep(): StepInterface;
+    public function getPreviousStep(): ?StepInterface;
 
     /** Get next step. */
-    public function getNextStep(): StepInterface;
+    public function getNextStep(): ?StepInterface;
 
     /** Is current step the first step? */
     public function isFirstStep(): bool;

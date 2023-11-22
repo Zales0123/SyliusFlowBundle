@@ -89,21 +89,21 @@ class ProcessContext implements ProcessContextInterface
         return $this->process;
     }
 
-    public function getCurrentStep(): StepInterface
+    public function getCurrentStep(): ?StepInterface
     {
         $this->assertInitialized();
 
         return $this->currentStep;
     }
 
-    public function getPreviousStep(): StepInterface
+    public function getPreviousStep(): ?StepInterface
     {
         $this->assertInitialized();
 
         return $this->previousStep;
     }
 
-    public function getNextStep(): StepInterface
+    public function getNextStep(): ?StepInterface
     {
         $this->assertInitialized();
 
